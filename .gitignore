@@ -1,0 +1,5 @@
+*.txt
+*.sh
+kraft/
+*.properties
+trogdor.conf

@@ -1,0 +1,25 @@
+{
+  "name": "vth-money-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",
+    "database.hostname": "postgres",
+    "database.port": "5432",
+    "database.user": "admin",
+    "database.password": "admin",
+    "database.dbname": "vth_money",
+    "database.server.name": "dbserver1",
+    "topic.prefix": "vth_money",
+    "schema.include.list": "public",
+    "table.include.list": "public.users,public.wallets,public.transactions,public.notifications,public.beneficiaries",
+    "plugin.name": "pgoutput",
+    "slot.name": "debezium",
+    "publication.name": "dbz_publication",
+    "decimal.handling.mode": "string",
+    "tombstones.on.delete": "false",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false"
+  }
+}

@@ -1,0 +1,6 @@
+taskmanager.numberOfTaskSlots: 1
+taskmanager.memory.process.size: 16384m
+jobmanager.memory.process.size: 4096m
+parallelism.default: 1
+execution.checkpointing.interval: 30s
+state.checkpoints.num-retained: 3

@@ -1,0 +1,244 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: vth-money-db
+    environment:
+      POSTGRES_DB: vth_money
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      # CDC configurations
+      POSTGRES_INITDB_ARGS: --data-checksums
+      # Replication configurations
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+      - "-c"
+      - "max_wal_senders=10"
+      - "-c"
+      - "max_replication_slots=10"
+      - "-c"
+      - "wal_sender_timeout=0"
+      - "-c"
+      - "max_connections=200"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/create_publication.sql:/docker-entrypoint-initdb.d/create_publication.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d vth_money"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vthmoneynetwork
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    healthcheck:
+      test: echo srvr | nc zookeeper 2181 || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vthmoneynetwork
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: kafka
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: nc -z localhost 9092 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    networks:
+      - vthmoneynetwork
+
+  debezium:
+    image: debezium/connect:2.3
+    container_name: debezium
+    depends_on:
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8083:8083"
+    environment:
+      # Kafka Connect settings
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: "1"
+      CONFIG_STORAGE_TOPIC: connect_configs
+      OFFSET_STORAGE_TOPIC: connect_offsets
+      STATUS_STORAGE_TOPIC: connect_statuses
+
+      # Converters
+      KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      KEY_CONVERTER_SCHEMAS_ENABLE: "false"
+      VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+
+      # Connect internal topics replication factors
+      OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      STATUS_STORAGE_REPLICATION_FACTOR: 1
+
+      # Connect worker task configs
+      CONNECT_REST_PORT: 8083
+      CONNECT_REST_ADVERTISED_HOST_NAME: debezium
+      TASKS_MAX: 1
+
+      # Enable Debezium scripting
+      ENABLE_DEBEZIUM_SCRIPTING: "true"
+
+      # Logging
+      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
+    volumes:
+      - ./debezium:/kafka/config
+    command: >
+      bash -c '
+        echo "Waiting for Kafka to be ready..."
+        cub kafka-ready -b kafka:9092 1 30
+        
+        echo "Starting Kafka Connect..."
+        /docker-entrypoint.sh start &
+        
+        echo "Waiting for Connect to start..."
+        while [ $$(curl -s -o /dev/null -w %{http_code} http://localhost:8083/connectors) -ne 200 ]; do 
+          sleep 5
+        done
+        
+        echo "Registering connector..."
+        curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" http://localhost:8083/connectors/ -d @/kafka/config/register-postgres.json
+        
+        wait
+      '
+    healthcheck:
+      test: curl -f http://localhost:8083/ || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vthmoneynetwork
+
+  kafka-console:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    depends_on:
+      - kafka
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    healthcheck:
+      test: curl -f http://localhost:8080 || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vthmoneynetwork
+
+  datagen:
+    build:
+      context: ./data_generator
+      dockerfile: Dockerfile.datagen
+    container_name: data-generator
+    environment:
+      POSTGRES_DB: vth_money
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - vthmoneynetwork
+
+  flink:
+    container_name: flink
+    build: ./flink
+    depends_on:
+      - minio
+      - hive-metastore
+    ports:
+      - "8081:8081"
+    networks:
+      - vthmoneynetwork
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=password
+    ports:
+      - 9001:9001
+      - 9000:9000
+    command: ["server", "/data", "--console-address", ":9001"]
+    networks:
+      - vthmoneynetwork
+    volumes:
+      - minio_data:/data
+
+  mc:
+    depends_on:
+      - minio
+    image: minio/mc
+    container_name: mc
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc config host add minio http://minio:9000 admin password) do echo '...waiting...' && sleep 1; done;
+      /usr/bin/mc ls minio/warehouse || /usr/bin/mc mb minio/warehouse;
+      tail -f /dev/null
+      "
+    networks:
+      - vthmoneynetwork
+
+  hive-metastore:
+    container_name: hms
+    hostname: hms
+    build: ./hms-standalone-s3
+    ports:
+      - "9083:9083"
+    environment:
+      - HMS_LOGLEVEL=INFO
+    networks:
+      - vthmoneynetwork
+
+volumes:
+  postgres_data:
+  minio_data:
+networks:
+  vthmoneynetwork:
+    name: vthmoneynetwork
+    driver: bridge
