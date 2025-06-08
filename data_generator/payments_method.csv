@@ -1,6 +1,6 @@
-code, name, description
-'VTH_WALLET', 'Ví VTH Money', 'Thanh toán qua ví VTH Money'
-'BANK_TRANSFER', 'Chuyển khoản', 'Chuyển khoản ngân hàng liên kết'
-'CREDIT_CARD', 'Thẻ tín dụng', 'Thanh toán bằng thẻ tín dụng qua VTH Money'
-'DEBIT_CARD', 'Thẻ ghi nợ', 'Thanh toán bằng thẻ ghi nợ qua VTH Money'
-'LINKED_BANK', 'Tài khoản ngân hàng', 'Tài khoản ngân hàng liên kết với VTH Money'
+id,code,name,description
+1,'VTH_WALLET','Ví VTH Money','Thanh toán qua ví VTH Money'
+2,'BANK_TRANSFER','Chuyển khoản','Chuyển khoản ngân hàng liên kết'
+3,'CREDIT_CARD','Thẻ tín dụng','Thanh toán bằng thẻ tín dụng qua VTH Money')
+4,'DEBIT_CARD','Thẻ ghi nợ','Thanh toán bằng thẻ ghi nợ qua VTH Money'
+5,'LINKED_BANK','Tài khoản ngân hàng','Tài khoản ngân hàng liên kết với VTH Money'

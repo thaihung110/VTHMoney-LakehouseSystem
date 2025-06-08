@@ -1,8 +1,8 @@
-code, name, description
-'DEPOSIT', 'Nạp tiền', 'Nạp tiền vào ví VTH Money'
-'WITHDRAW', 'Rút tiền', 'Rút tiền từ ví VTH Money'
-'TRANSFER', 'Chuyển tiền', 'Chuyển tiền giữa các ví VTH Money'
-'PAYMENT', 'Thanh toán', 'Thanh toán hóa đơn/dịch vụ qua VTH Money'
-'REFUND', 'Hoàn tiền', 'Hoàn tiền giao dịch VTH Money'
-'MOBILE_TOPUP', 'Nạp điện thoại', 'Nạp tiền điện thoại qua VTH Money'
-'BILL_PAYMENT', 'Thanh toán hóa đơn', 'Thanh toán các loại hóa đơn qua VTH Money'
+id,code,name,description
+1,'DEPOSIT','Nạp tiền','Nạp tiền vào ví VTH Money'
+2,'WITHDRAW','Rút tiền','Rút tiền từ ví VTH Money'
+3,'TRANSFER','Chuyển tiền','Chuyển tiền giữa các ví VTH Money'
+4,'PAYMENT','Thanh toán','Thanh toán hóa đơn/dịch vụ qua VTH Money'
+5,'REFUND','Hoàn tiền','Hoàn tiền giao dịch VTH Money'
+6,'MOBILE_TOPUP','Nạp điện thoại','Nạp tiền điện thoại qua VTH Money'
+7,'BILL_PAYMENT','Thanh toán hóa đơn','Thanh toán các loại hóa đơn qua VTH Money' 

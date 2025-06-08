@@ -126,18 +126,18 @@ ALTER TABLE public.notifications REPLICA IDENTITY FULL;
 ALTER TABLE public.beneficiaries REPLICA IDENTITY FULL;
 
 -- Insert some initial data
-INSERT INTO transaction_types (code, name, description) VALUES
-    ('DEPOSIT', 'Nạp tiền', 'Nạp tiền vào ví VTH Money'),
-    ('WITHDRAW', 'Rút tiền', 'Rút tiền từ ví VTH Money'),
-    ('TRANSFER', 'Chuyển tiền', 'Chuyển tiền giữa các ví VTH Money'),
-    ('PAYMENT', 'Thanh toán', 'Thanh toán hóa đơn/dịch vụ qua VTH Money'),
-    ('REFUND', 'Hoàn tiền', 'Hoàn tiền giao dịch VTH Money'),
-    ('MOBILE_TOPUP', 'Nạp điện thoại', 'Nạp tiền điện thoại qua VTH Money'),
-    ('BILL_PAYMENT', 'Thanh toán hóa đơn', 'Thanh toán các loại hóa đơn qua VTH Money');
+INSERT INTO transaction_types (id, code, name, description) VALUES
+    (1, 'DEPOSIT', 'Nạp tiền', 'Nạp tiền vào ví VTH Money'),
+    (2,'WITHDRAW', 'Rút tiền', 'Rút tiền từ ví VTH Money'),
+    (3,'TRANSFER', 'Chuyển tiền', 'Chuyển tiền giữa các ví VTH Money'),
+    (4,'PAYMENT', 'Thanh toán', 'Thanh toán hóa đơn/dịch vụ qua VTH Money'),
+    (5,'REFUND', 'Hoàn tiền', 'Hoàn tiền giao dịch VTH Money'),
+    (6,'MOBILE_TOPUP', 'Nạp điện thoại', 'Nạp tiền điện thoại qua VTH Money'),
+    (7,'BILL_PAYMENT', 'Thanh toán hóa đơn', 'Thanh toán các loại hóa đơn qua VTH Money');
 
-INSERT INTO payment_methods (code, name, description) VALUES
-    ('VTH_WALLET', 'Ví VTH Money', 'Thanh toán qua ví VTH Money'),
-    ('BANK_TRANSFER', 'Chuyển khoản', 'Chuyển khoản ngân hàng liên kết'),
-    ('CREDIT_CARD', 'Thẻ tín dụng', 'Thanh toán bằng thẻ tín dụng qua VTH Money'),
-    ('DEBIT_CARD', 'Thẻ ghi nợ', 'Thanh toán bằng thẻ ghi nợ qua VTH Money'),
-    ('LINKED_BANK', 'Tài khoản ngân hàng', 'Tài khoản ngân hàng liên kết với VTH Money');
+INSERT INTO payment_methods (id, code, name, description) VALUES
+    (1, 'VTH_WALLET', 'Ví VTH Money', 'Thanh toán qua ví VTH Money'),
+    (2, 'BANK_TRANSFER', 'Chuyển khoản', 'Chuyển khoản ngân hàng liên kết'),
+    (3, 'CREDIT_CARD', 'Thẻ tín dụng', 'Thanh toán bằng thẻ tín dụng qua VTH Money'),
+    (4, 'DEBIT_CARD', 'Thẻ ghi nợ', 'Thanh toán bằng thẻ ghi nợ qua VTH Money'),
+    (5, 'LINKED_BANK', 'Tài khoản ngân hàng', 'Tài khoản ngân hàng liên kết với VTH Money');

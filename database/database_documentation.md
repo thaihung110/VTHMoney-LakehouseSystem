@@ -52,26 +52,6 @@ Lưu trữ thông tin người dùng của hệ thống.
 | created_at    | TIMESTAMP    | Thời điểm tạo                   |
 | updated_at    | TIMESTAMP    | Thời điểm cập nhật cuối         |
 
-### 2. user_kyc
-
-Quản lý thông tin xác thực danh tính của người dùng.
-
-| Cột              | Kiểu dữ liệu | Mô tả                               |
-| ---------------- | ------------ | ----------------------------------- |
-| id               | UUID         | Khóa chính, tự động sinh            |
-| user_id          | UUID         | Khóa ngoại tới bảng users           |
-| id_type          | VARCHAR(50)  | Loại giấy tờ (CMND, CCCD, Hộ chiếu) |
-| id_number        | VARCHAR(50)  | Số giấy tờ                          |
-| id_issue_date    | DATE         | Ngày cấp                            |
-| id_expiry_date   | DATE         | Ngày hết hạn                        |
-| front_image_url  | TEXT         | URL ảnh mặt trước giấy tờ           |
-| back_image_url   | TEXT         | URL ảnh mặt sau giấy tờ             |
-| selfie_image_url | TEXT         | URL ảnh chân dung                   |
-| status           | kyc_status   | Trạng thái xác thực                 |
-| verified_at      | TIMESTAMP    | Thời điểm xác thực                  |
-| created_at       | TIMESTAMP    | Thời điểm tạo                       |
-| updated_at       | TIMESTAMP    | Thời điểm cập nhật cuối             |
-
 ### 3. wallets
 
 Quản lý ví điện tử của người dùng.
