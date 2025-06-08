@@ -3,3 +3,4 @@
 kraft/
 *.properties
 trogdor.conf
+./memory-bank/
