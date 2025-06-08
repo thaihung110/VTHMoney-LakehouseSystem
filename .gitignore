@@ -7,3 +7,5 @@ kraft/
 *.properties
 trogdor.conf
 memory-bank/
+logs/
+dbt_packages/

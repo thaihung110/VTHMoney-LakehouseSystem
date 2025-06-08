@@ -1,0 +1,82 @@
+SELECT * FROM lakehouse."staging.db"."beneficiaries_iceberg".data limit 10
+id	user_id	beneficiary_name	beneficiary_phone	beneficiary_bank_code	beneficiary_bank_account	beneficiary_bank_branch	is_favorite	created_at	updated_at
+d0e94956-055f-4fbc-8c88-ceaf9033e556	d8471eb3-0dd5-4b33-a8bc-e84282378081	Vũ Đình Cường	0808434765	VPB	5027033004	Chi nhánh trung tâm	false	2025-06-07 12:33:52.527	2025-06-07 12:33:52.527
+8a69bc58-1bc7-4660-b60b-b5d3b9044b71	5cb9c42f-a162-4ed8-b4f3-74008a278a49	Huỳnh Đức Hùng	0423628006	VPB	6467614905	Chi nhánh trung tâm	false	2025-06-07 12:33:52.730	2025-06-07 12:33:52.730
+da342b4f-1802-48a9-8da2-14796249d894	410b62a2-c79c-48e4-a05b-8e7cbcce27cc	Lê Xuân Giang	0498006593	VPB	8823361931	Chi nhánh trung tâm	false	2025-06-07 12:33:52.855	2025-06-07 12:33:52.855
+abb8d159-8f5c-4101-af76-fece73e9941e	ee4fdfed-cb64-420a-ac87-aeaf99187080	Võ Đình Dũng	0223699403	VPB	9627255291	Chi nhánh trung tâm	false	2025-06-07 12:33:52.963	2025-06-07 12:33:52.963
+9e3c4360-62c8-417a-81cf-052c37c686b1	1072632a-0c66-43b4-b60c-726da6f429e2	Võ Thị Giang	0101015052	TCB	9915004773	Chi nhánh trung tâm	false	2025-06-07 12:33:53.083	2025-06-07 12:33:53.083
+8066de52-ed17-4acf-88d7-b16b2468a18c	45d5c1de-25c2-4921-8eb7-b13ca17128c0	Hoàng Thành Linh	0780690144	VPB	0769390903	Chi nhánh trung tâm	false	2025-06-07 12:33:53.210	2025-06-07 12:33:53.210
+c933e9fa-08d7-4690-8075-10a21dbca079	751d7ccc-0015-4d12-ab41-3b4bf304d854	Đặng Thị Hùng	0679570741	MBB	6550905290	Chi nhánh trung tâm	false	2025-06-07 12:33:53.316	2025-06-07 12:33:53.316
+3601ec60-1631-43d8-9658-c10fd1d41aa4	a8ec41ac-e5a8-4bf4-9b39-f646904d6cec	Hoàng Đình Cường	0820394863	ACB	8636032002	Chi nhánh trung tâm	false	2025-06-07 12:33:53.441	2025-06-07 12:33:53.441
+9ac841f7-919e-45a7-8851-a0d292f70b4d	7b05fc13-61aa-4729-a3bb-93d6060b2f54	Trần Văn Phúc	0149517074	TCB	2334635416	Chi nhánh trung tâm	false	2025-06-07 12:33:53.567	2025-06-07 12:33:53.567
+40d823a7-1761-435d-874f-11006a5f3952	544d46af-d59e-4601-8b69-d4ccddcc9150	Hoàng Thành Giang	0314536223	ACB	3598955238	Chi nhánh trung tâm	false	2025-06-07 12:33:53.691	2025-06-07 12:33:53.691
+
+select * from lakehouse."staging.db"."payments_method".data limit 10
+code	 name	 description
+'VTH_WALLET'	 'Ví VTH Money'	 'Thanh toán qua ví VTH Money'
+'BANK_TRANSFER'	 'Chuyển khoản'	 'Chuyển khoản ngân hàng liên kết'
+'CREDIT_CARD'	 'Thẻ tín dụng'	 'Thanh toán bằng thẻ tín dụng qua VTH Money'
+'DEBIT_CARD'	 'Thẻ ghi nợ'	 'Thanh toán bằng thẻ ghi nợ qua VTH Money'
+'LINKED_BANK'	 'Tài khoản ngân hàng'	 'Tài khoản ngân hàng liên kết với VTH Money'
+
+select * from lakehouse."staging.db"."transaction_types".data limit 10
+code	 name	 description
+'DEPOSIT'	 'Nạp tiền'	 'Nạp tiền vào ví VTH Money'
+'WITHDRAW'	 'Rút tiền'	 'Rút tiền từ ví VTH Money'
+'TRANSFER'	 'Chuyển tiền'	 'Chuyển tiền giữa các ví VTH Money'
+'PAYMENT'	 'Thanh toán'	 'Thanh toán hóa đơn/dịch vụ qua VTH Money'
+'REFUND'	 'Hoàn tiền'	 'Hoàn tiền giao dịch VTH Money'
+'MOBILE_TOPUP'	 'Nạp điện thoại'	 'Nạp tiền điện thoại qua VTH Money'
+'BILL_PAYMENT'	 'Thanh toán hóa đơn'	 'Thanh toán các loại hóa đơn qua VTH Money'
+
+select * from lakehouse."staging.db"."users_iceberg".data limit 10
+id	phone_number	email	full_name	date_of_birth	gender	status	password_hash	created_at	updated_at
+2f25c353-1a13-47e6-ba8a-981165633f57	0786291052	user85165@example.com	Huỳnh Xuân Linh	3688	other	active	hashed_password_123	2025-06-07 11:55:49.049	2025-06-07 11:55:49.049
+c7404b82-1c8a-479b-ba71-b4a436888b5b	0118451250	user31945@example.com	Võ Văn Hùng	-5089	male	active	hashed_password_123	2025-06-07 11:55:49.180	2025-06-07 11:55:49.180
+a8fcf378-aa4e-4098-bab6-84e6eb2bc483	0312339155	user04218@example.com	Phạm Thị Phúc	11952	female	active	hashed_password_123	2025-06-07 11:55:54.849	2025-06-07 11:55:54.849
+b25403f0-f210-45c1-8b68-6c71d8072c70	0759947540	user71012@example.com	Đặng Hữu Giang	12556	female	active	hashed_password_123	2025-06-07 11:55:54.977	2025-06-07 11:55:54.977
+0cf65540-cb01-4634-8194-bbf8acdf01bd	0258594817	user29222@example.com	Phan Văn Phúc	10207	female	active	hashed_password_123	2025-06-07 11:55:55.084	2025-06-07 11:55:55.084
+cbf3de78-98e7-4766-8fc2-62e9ed8d9090	0341933078	user33839@example.com	Huỳnh Văn An	-3359	male	active	hashed_password_123	2025-06-07 11:55:49.118	2025-06-07 11:55:49.118
+557cf122-a92e-48cd-9a26-993875087cba	0554743128	user59028@example.com	Nguyễn Minh Hùng	8640	male	active	hashed_password_123	2025-06-07 11:55:49.224	2025-06-07 11:55:49.224
+60b091f7-a8eb-47cf-bddc-1d0e5d36954c	0948546453	user57410@example.com	Phạm Đình Hùng	6366	male	active	hashed_password_123	2025-06-07 11:55:49.352	2025-06-07 11:55:49.352
+a9cbcd66-52ba-411b-bf5a-0733f839c4e3	0720137877	user36534@example.com	Nguyễn Hoàng Bình	6699	other	active	hashed_password_123	2025-06-07 11:55:49.478	2025-06-07 11:55:49.478
+1ee0188f-188b-418c-80e5-592a8350b4c4	0711489666	user43637@example.com	Trần Xuân Phúc	-4787	female	active	hashed_password_123	2025-06-07 11:55:49.608	2025-06-07 11:55:49.608
+
+select * from lakehouse."staging.db"."wallets_iceberg".data limit 10
+id	user_id	balance	currency	status	created_at	updated_at
+ebeb3923-bbed-4f42-9d8b-c17846a8db4d	728a29e8-cf59-456e-ba79-a58489f5cae0	1335298.8982	VND	active	2025-06-07 11:38:45.276	2025-06-07 11:38:45.276
+5a7419d2-4f4c-493b-8748-8b7c404688b6	712a72de-c45a-490f-89f6-4635fc46ae67	9974618.6892	VND	active	2025-06-07 11:38:45.279	2025-06-07 11:38:45.279
+7108d5fb-ff23-40a4-8ec8-75060ba5d3bb	5bfec7df-2ae4-4449-ba0c-4b690fad9d19	8573122.0162	VND	active	2025-06-07 11:38:45.282	2025-06-07 11:38:45.282
+cbd7001f-79bf-4d31-b55e-6aa31e6702b1	988fe1cd-420b-40b6-b06f-747d778d4a93	3415802.6448	VND	active	2025-06-07 11:38:45.285	2025-06-07 11:38:45.285
+7bcb2ead-21fc-40dd-be0b-6617ac9f0102	b56ed53c-9198-4a1c-a2de-73daacebb526	6119864.8582	VND	active	2025-06-07 11:38:45.290	2025-06-07 11:38:45.290
+83e468c9-d740-46a0-957f-2bd136a54b00	c8876c71-2552-4cbf-b8c0-eef8672616ab	885664.8925	VND	active	2025-06-07 11:38:45.293	2025-06-07 11:38:45.293
+f248fd6a-55d5-4a63-8cc1-14c14382126a	35f44d3f-4e7f-4784-96c0-4f0e61567937	8178436.1385	VND	active	2025-06-07 11:38:45.296	2025-06-07 11:38:45.296
+713c9450-359b-404f-80bd-459458c4b44c	7fa40933-a8e1-45b9-85e3-27ed3a245002	6993032.3263	VND	active	2025-06-07 11:38:45.299	2025-06-07 11:38:45.299
+96ef9a04-3f81-4266-9fd4-9739f4fa8150	7ff71fc1-4ed3-485f-a322-1cdd8425b1bd	7702420.6318	VND	active	2025-06-07 11:38:45.302	2025-06-07 11:38:45.302
+dedb5622-780c-458d-89c9-e2567ececd8f	d4f99808-dc22-480b-9194-27c84bf4aa68	2486255.9260	VND	active	2025-06-07 11:38:45.306	2025-06-07 11:38:45.306
+
+select * from lakehouse."staging.db"."notifications_iceberg".data limit 10
+id	user_id	transaction_id	title	message	is_read	created_at
+fba3cbcf-71ed-4e56-aa69-ff5e5bafd637	25df8238-4ba6-402d-9913-ac3643b1c34a	1d1f6c4a-e15e-40f5-b000-14051b0ec65f	Giao dịch thành công	Giao dịch của bạn đã được thực hiện thành công	false	2025-06-07 13:40:20.317
+bb1a5c9a-0a8c-41b6-a835-5c2d31eafe30	788eeac4-2797-4dc0-b93d-5aa0cc6674b2	bb2a7706-a087-4ac4-846b-78583ab139ac	Giao dịch thành công	Giao dịch của bạn đã được thực hiện thành công	false	2025-06-07 13:40:20.441
+1cb73353-5f3d-457e-99ce-7c93ded17749	a57779e9-68d3-4f08-b847-5c4754cc73ac	fbe7f0c2-9316-4b1b-90c6-94736dcd372a	Giao dịch thành công	Giao dịch của bạn đã được thực hiện thành công	false	2025-06-07 13:40:26.084
+3ace0381-10f7-4da1-98ae-980e2eac769f	c9445c37-63c4-469e-bd13-d009cddd7602	cbb17d52-311d-4125-b047-5960d82e5c42	Giao dịch thành công	Giao dịch của bạn đã được thực hiện thành công	false	2025-06-07 13:40:26.208
+24796fae-447b-4d67-b7cc-921cb7e00fc8	1fe4f220-01e1-4da7-91ac-58e83c66619b	d6245233-27c0-4939-bbf9-7b7da91875eb	Giao dịch thành công	Giao dịch của bạn đã được thực hiện thành công	false	2025-06-07 13:40:26.333
+a2d21e78-1b44-49e4-92a7-3b9bc00cf30c	ff8f74a7-cbb1-4a40-9246-b529afa97553	ae7ce8fe-2fd4-4469-bcdc-7fb26552715d	Giao dịch thành công	Giao dịch của bạn đã được thực hiện thành công	false	2025-06-07 13:40:20.775
+c3d18ccb-61d5-4566-83f7-b56789935ba0	1096c53d-b136-42e0-90a6-982a887aabb2	1f531a91-eb6f-4622-ad74-7eb8577a6c80	Giao dịch thành công	Giao dịch của bạn đã được thực hiện thành công	false	2025-06-07 13:40:20.878
+fea31ab9-ceff-491c-8097-c49898e7cb92	2158a816-4dba-473a-954f-fa68057a247c	f2bbd9c4-64c3-45e3-ab9d-f728f865ad52	Giao dịch thành công	Giao dịch của bạn đã được thực hiện thành công	false	2025-06-07 13:40:20.982
+48bb0f8f-fc3c-49e0-a816-e660851d5959	c9ca46f8-ae12-474e-9b28-27e99c2d456e	2ea26faf-dabb-4ffd-8679-588cd8e293f1	Giao dịch thành công	Giao dịch của bạn đã được thực hiện thành công	false	2025-06-07 13:40:21.106
+f6b7d4a7-4eb8-4332-88f8-b725aa0de762	80bae8af-868f-4f9a-adf2-9f75fda36b78	d476c5f6-2fac-4770-b128-2f79c260d5b4	Giao dịch thành công	Giao dịch của bạn đã được thực hiện thành công	false	2025-06-07 13:40:21.230
+
+SELECT *  FROM lakehouse."staging.db"."transactions_iceberg".data limit 10
+id	transaction_type_id	payment_method_id	sender_id	receiver_id	sender_wallet_id	receiver_wallet_id	amount	currency	fee_amount	status	description	reference_number	created_at	updated_at
+b250ccdd-1db9-49e5-8a40-b6da7754e6ce	1	4			faab8444-af76-4f29-b7b5-8f403ee9b238	aec742df-84ab-41e8-b320-66bd0ce78f48	982707.3304	VND	982.7073	completed	Test transaction	TRX17492989402737	2025-06-07 12:22:20.865	2025-06-07 12:22:20.865
+877b14d6-709d-45d4-9883-f4955f0515e2	2	2			6d09688c-49e0-4789-b948-0258e1311542	b6b64554-cc33-475f-b177-dda3965f121b	729475.6512	VND	729.4757	completed	Test transaction	TRX17492989472057	2025-06-07 12:22:27.066	2025-06-07 12:22:27.066
+fae9ed77-b108-4f64-b7cb-823c750ea1a6	5	1			f38a37ba-0513-4892-be20-b59724504a02	9faee28c-264d-45e9-96eb-b378e2c46522	322423.2351	VND	322.4232	completed	Test transaction	TRX17492989479712	2025-06-07 12:22:27.194	2025-06-07 12:22:27.194
+1aa1b354-6631-4079-b430-3b1314afc4bf	1	3			821c29d7-bb7b-4d92-a3e4-d1554db961eb	d60f4a65-430a-44bf-9a66-9598b27c4b42	155259.0692	VND	155.2591	completed	Test transaction	TRX17492989417787	2025-06-07 12:22:21.153	2025-06-07 12:22:21.153
+e28cec5a-67ef-46c6-b8f3-299af21b131a	2	3			4b351b54-faa6-4e3a-88d3-6e515d696ef3	56d121ec-0d54-47fa-9bb8-59d7011c41b9	264953.8480	VND	264.9538	completed	Test transaction	TRX17492989413449	2025-06-07 12:22:21.257	2025-06-07 12:22:21.257
+fc6a4fa3-db3c-42f7-95e8-81133ffba039	4	1			c583a27f-f6c0-49af-83d0-995616131745	e9712bf5-5da9-42af-8463-064e821e389b	373515.5107	VND	373.5155	completed	Test transaction	TRX17492989417868	2025-06-07 12:22:21.382	2025-06-07 12:22:21.382
+cf0032bf-4448-4f6b-a117-33c65c4e5c12	1	1			fcdda970-ff34-439f-88f8-83c37f8d289e	4f1dcc18-2c25-4291-a775-ef65eab73d9a	402080.1463	VND	402.0801	completed	Test transaction	TRX17492989418711	2025-06-07 12:22:21.486	2025-06-07 12:22:21.486
+874c3995-18ad-45c9-9429-f18ee26b1865	5	2			6f83d858-03be-4b8e-b7a5-99fa5aab8e68	22677646-c5f2-42ce-9eda-aec942bffd9f	362817.1104	VND	362.8171	completed	Test transaction	TRX17492989411249	2025-06-07 12:22:21.611	2025-06-07 12:22:21.611
+fc1ef697-00e2-4e08-be23-ec377878e3ac	5	4			f5c7a010-c790-4fba-9665-d6ec36d588f5	02abf2dc-a24b-47a2-8181-71299c6261b0	46637.3389	VND	46.6373	completed	Test transaction	TRX17492989415934	2025-06-07 12:22:21.715	2025-06-07 12:22:21.715
+b55d4787-aeff-4cf7-84f7-729130a8894f	4	2			c766f305-a2f8-4a58-a605-b2069444917c	58e28efb-2558-4e2a-906d-d61aa395b0be	208356.1513	VND	208.3562	completed	Test transaction	TRX17492989418645	2025-06-07 12:22:21.840	2025-06-07 12:22:21.840
