@@ -235,9 +235,80 @@ services:
     networks:
       - vthmoneynetwork
 
+  airflow-webserver:
+    # image: custom-airflow:latest
+    build: ./airflow
+    container_name: airflow-webserver
+    restart: always
+    depends_on:
+      - minio
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=sqlite:////opt/airflow/airflow.db
+      - AIRFLOW__CORE__FERNET_KEY=wyfb-GXn2-07WGvGWb0wGmIxddU598KiAWUTkGMu9tM=
+      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=True
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__WEBSERVER__AUTHENTICATE=True
+      - AIRFLOW__WEBSERVER__AUTH_BACKEND=airflow.www.security.AuthenticationBackend
+    command: >
+      bash -c "
+        airflow db upgrade &&
+        airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin &&
+        airflow webserver
+      "
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./airflow/logs:/opt/airflow/logs
+    ports:
+      - 8082:8080
+    networks:
+      - vthmoneynetwork
+
+  airflow-scheduler:
+    # image: custom-airflow:latest
+    build: ./airflow
+    container_name: airflow-scheduler
+    restart: always
+    depends_on:
+      - airflow-webserver
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=sqlite:////opt/airflow/airflow.db
+      - AIRFLOW__CORE__FERNET_KEY=wyfb-GXn2-07WGvGWb0wGmIxddU598KiAWUTkGMu9tM=
+      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=True
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__WEBSERVER__AUTHENTICATE=True
+      - AIRFLOW__WEBSERVER__AUTH_BACKEND=airflow.www.security.AuthenticationBackend
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./airflow/logs:/opt/airflow/logs
+    command: scheduler
+    networks:
+      - vthmoneynetwork
+
+  dremio:
+    platform: linux/x86_64
+    image: dremio/dremio-oss:25.2
+    container_name: dremio
+    ports:
+      - 9047:9047
+      - 31010:31010
+      - 32010:32010
+    environment:
+      - DREMIO_JAVA_SERVER_EXTRA_OPTS=-Dpaths.dist=file:///opt/dremio/data/dist
+    volumes:
+      - dremio-data:/opt/dremio/data
+      - dremio-conf:/opt/dremio/conf
+    networks:
+      - vthmoneynetwork
+
 volumes:
   postgres_data:
   minio_data:
+  dremio-data:
+  dremio-conf:
 networks:
   vthmoneynetwork:
     name: vthmoneynetwork

@@ -1,6 +1,9 @@
-*.txt
+message.txt
+SRS.txt
+test_cmd.txt
+connection_properties_dremio.txt
 *.sh
 kraft/
 *.properties
 trogdor.conf
-./memory-bank/
+memory-bank/

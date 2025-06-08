@@ -2,8 +2,6 @@ FROM apache/flink:1.18.1-scala_2.12-java11
 
 WORKDIR /opt/flink
 
-
-
 # Install required dependencies
 RUN apt-get update && \
     apt-get install -y vim lnav
