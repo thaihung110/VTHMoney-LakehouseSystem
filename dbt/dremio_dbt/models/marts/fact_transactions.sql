@@ -16,8 +16,8 @@ with tx as (
         t.created_at,
         t.updated_at,
         cast(date_trunc('day', t.created_at) as date) as transaction_date
-    from {{ ref('transactions_intermediate') }} t
-    left join {{ ref('wallets_intermediate') }} sw on t.sender_wallet_id = sw.wallet_id
-    left join {{ ref('wallets_intermediate') }} rw on t.receiver_wallet_id = rw.wallet_id
+    from lakehouse.intermediate."transactions_intermediate" t
+    left join lakehouse.intermediate."wallets_intermediate" sw on t.sender_wallet_id = sw.wallet_id
+    left join lakehouse.intermediate."wallets_intermediate" rw on t.receiver_wallet_id = rw.wallet_id
 )
 select * from tx

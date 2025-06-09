@@ -219,6 +219,10 @@ services:
       /bin/sh -c "
       until (/usr/bin/mc config host add minio http://minio:9000 admin password) do echo '...waiting...' && sleep 1; done;
       /usr/bin/mc ls minio/warehouse || /usr/bin/mc mb minio/warehouse;
+      /usr/bin/mc ls minio/warehouse/intermediate || /usr/bin/mc mb minio/warehouse/intermediate;
+      /usr/bin/mc ls minio/warehouse/mart || /usr/bin/mc mb minio/warehouse/mart;
+      /usr/bin/mc cp /etc/hosts minio/warehouse/intermediate/.keep || true;
+      /usr/bin/mc cp /etc/hosts minio/warehouse/mart/.keep || true;
       tail -f /dev/null
       "
     networks:
@@ -232,59 +236,6 @@ services:
       - "9083:9083"
     environment:
       - HMS_LOGLEVEL=INFO
-    networks:
-      - vthmoneynetwork
-
-  airflow-webserver:
-    # image: custom-airflow:latest
-    build: ./airflow
-    container_name: airflow-webserver
-    restart: always
-    depends_on:
-      - minio
-    environment:
-      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=sqlite:////opt/airflow/airflow.db
-      - AIRFLOW__CORE__FERNET_KEY=wyfb-GXn2-07WGvGWb0wGmIxddU598KiAWUTkGMu9tM=
-      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=True
-      - AIRFLOW__CORE__LOAD_EXAMPLES=False
-      - AIRFLOW__WEBSERVER__AUTHENTICATE=True
-      - AIRFLOW__WEBSERVER__AUTH_BACKEND=airflow.www.security.AuthenticationBackend
-    command: >
-      bash -c "
-        airflow db upgrade &&
-        airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin &&
-        airflow webserver
-      "
-    volumes:
-      - ./airflow/dags:/opt/airflow/dags
-      - ./airflow/plugins:/opt/airflow/plugins
-      - ./airflow/logs:/opt/airflow/logs
-    ports:
-      - 8082:8080
-    networks:
-      - vthmoneynetwork
-
-  airflow-scheduler:
-    # image: custom-airflow:latest
-    build: ./airflow
-    container_name: airflow-scheduler
-    restart: always
-    depends_on:
-      - airflow-webserver
-    environment:
-      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=sqlite:////opt/airflow/airflow.db
-      - AIRFLOW__CORE__FERNET_KEY=wyfb-GXn2-07WGvGWb0wGmIxddU598KiAWUTkGMu9tM=
-      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=True
-      - AIRFLOW__CORE__LOAD_EXAMPLES=False
-      - AIRFLOW__WEBSERVER__AUTHENTICATE=True
-      - AIRFLOW__WEBSERVER__AUTH_BACKEND=airflow.www.security.AuthenticationBackend
-    volumes:
-      - ./airflow/dags:/opt/airflow/dags
-      - ./airflow/plugins:/opt/airflow/plugins
-      - ./airflow/logs:/opt/airflow/logs
-    command: scheduler
     networks:
       - vthmoneynetwork
 
@@ -304,11 +255,85 @@ services:
     networks:
       - vthmoneynetwork
 
+  airflow-db:
+    image: postgres:14
+    container_name: airflow-db
+    environment:
+      POSTGRES_DB: airflow
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+    volumes:
+      - airflow_postgres_data:/var/lib/postgresql/data
+    networks:
+      - vthmoneynetwork
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow -d airflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  airflow-webserver:
+    build:
+      context: ./airflow
+    container_name: airflow-webserver
+    depends_on:
+      airflow-db:
+        condition: service_healthy
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+      AIRFLOW__WEBSERVER__PORT: 8082
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__FERNET_KEY: "VKgYkKkKI8G5bxqJd2aTVvGgugpNElZkIhF0ZVwMPs0="
+      AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE: "Asia/Ho_Chi_Minh"
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./dbt/dremio_dbt:/opt/airflow/dbt
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./airflow/logs:/opt/airflow/logs
+    command: >
+      bash -c "\
+        airflow db upgrade && \
+        airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com && \
+        airflow webserver"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks:
+      - vthmoneynetwork
+
+  airflow-scheduler:
+    build:
+      context: ./airflow
+    container_name: airflow-scheduler
+    depends_on:
+      airflow-db:
+        condition: service_healthy
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db:5432/airflow
+      AIRFLOW__CORE__FERNET_KEY: "VKgYkKkKI8G5bxqJd2aTVvGgugpNElZkIhF0ZVwMPs0="
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE: "Asia/Ho_Chi_Minh"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./dbt/dremio_dbt:/opt/airflow/dbt
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./airflow/logs:/opt/airflow/logs
+    command: bash -c "airflow db upgrade && airflow scheduler"
+    networks:
+      - vthmoneynetwork
+
 volumes:
   postgres_data:
   minio_data:
   dremio-data:
   dremio-conf:
+  airflow_postgres_data:
 networks:
   vthmoneynetwork:
     name: vthmoneynetwork

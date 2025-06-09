@@ -3,4 +3,4 @@ select
     code,
     name,
     description
-from {{ ref('payment_methods_intermediate') }} 
+from lakehouse.intermediate."payment_methods_intermediate"

@@ -9,3 +9,5 @@ trogdor.conf
 memory-bank/
 logs/
 dbt_packages/
+dremio_query.txt
+__pycache__/    

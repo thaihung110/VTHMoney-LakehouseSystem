@@ -1,15 +1,25 @@
 dremio_dbt:
   outputs:
-    dev:
-      dremio_space: '@user'
-      dremio_space_folder: no_schema
-      object_storage_path: no_schema
+    intermediate:
+      object_storage_path: intermediate
       object_storage_source: lakehouse
       password: thaihunghp123
       port: 9047
-      software_host: localhost
+      software_host: dremio
       threads: 1
       type: dremio
       use_ssl: false
       user: hungvt
-  target: dev
+
+    marts:
+      object_storage_path: marts
+      object_storage_source: lakehouse
+      password: thaihunghp123
+      port: 9047
+      software_host: dremio
+      threads: 1
+      type: dremio
+      use_ssl: false
+      user: hungvt
+
+  target: marts

@@ -6,4 +6,4 @@ select
     gender,
     status,
     created_at
-from {{ ref('users_intermediate') }} 
+from lakehouse.intermediate."users_intermediate"

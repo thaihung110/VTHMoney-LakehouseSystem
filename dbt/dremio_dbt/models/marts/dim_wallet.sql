@@ -4,4 +4,4 @@ select
     currency,
     status,
     created_at
-from {{ ref('wallets_intermediate') }} 
+from lakehouse.intermediate."wallets_intermediate"
