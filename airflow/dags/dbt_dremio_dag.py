@@ -18,12 +18,12 @@ with DAG(
 
     dbt_run_intermediate = BashOperator(
         task_id="dbt_run_intermediate",
-        bash_command="cd /opt/airflow/dbt && dbt run --target intermediate",
+        bash_command="cd /opt/airflow/dbt && dbt run --target intermediate --select models/intermediate",
     )
 
     dbt_run_marts = BashOperator(
         task_id="dbt_run_marts",
-        bash_command="cd /opt/airflow/dbt && dbt run --target marts",
+        bash_command="cd /opt/airflow/dbt && dbt run --target marts --select models/marts",
     )
 
     dbt_run_intermediate >> dbt_run_marts
