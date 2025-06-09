@@ -6,8 +6,10 @@ connection_properties_dremio.txt
 kraft/
 *.properties
 trogdor.conf
-memory-bank/
+./memory-bank/
 logs/
 dbt_packages/
 dremio_query.txt
 __pycache__/    
+mart_schema.txt
+create_clickhouse_table.txt

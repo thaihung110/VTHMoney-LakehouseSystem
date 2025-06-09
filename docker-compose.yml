@@ -195,6 +195,17 @@ services:
     networks:
       - vthmoneynetwork
 
+  hive-metastore:
+    container_name: hms
+    hostname: hms
+    build: ./hms-standalone-s3
+    ports:
+      - "9083:9083"
+    environment:
+      - HMS_LOGLEVEL=INFO
+    networks:
+      - vthmoneynetwork
+
   minio:
     image: minio/minio
     container_name: minio
@@ -219,23 +230,22 @@ services:
       /bin/sh -c "
       until (/usr/bin/mc config host add minio http://minio:9000 admin password) do echo '...waiting...' && sleep 1; done;
       /usr/bin/mc ls minio/warehouse || /usr/bin/mc mb minio/warehouse;
-      /usr/bin/mc ls minio/warehouse/intermediate || /usr/bin/mc mb minio/warehouse/intermediate;
-      /usr/bin/mc ls minio/warehouse/mart || /usr/bin/mc mb minio/warehouse/mart;
-      /usr/bin/mc cp /etc/hosts minio/warehouse/intermediate/.keep || true;
-      /usr/bin/mc cp /etc/hosts minio/warehouse/mart/.keep || true;
       tail -f /dev/null
       "
     networks:
       - vthmoneynetwork
 
-  hive-metastore:
-    container_name: hms
-    hostname: hms
-    build: ./hms-standalone-s3
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse
     ports:
-      - "9083:9083"
+      - "8123:8123" # HTTP interface (cho trình duyệt hoặc API)
+      - "9002:9000" # Native client (cho clickhouse-client)
     environment:
-      - HMS_LOGLEVEL=INFO
+      - CLICKHOUSE_USER=admin
+      - CLICKHOUSE_PASSWORD=password
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
     networks:
       - vthmoneynetwork
 
@@ -274,7 +284,7 @@ services:
 
   airflow-webserver:
     build:
-      context: ./airflow
+      : ./airflow
     container_name: airflow-webserver
     depends_on:
       airflow-db:
@@ -334,6 +344,8 @@ volumes:
   dremio-data:
   dremio-conf:
   airflow_postgres_data:
+  clickhouse_data:
+
 networks:
   vthmoneynetwork:
     name: vthmoneynetwork

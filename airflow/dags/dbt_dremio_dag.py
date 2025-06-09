@@ -12,7 +12,7 @@ default_args = {
 with DAG(
     "dbt_dremio_run",
     default_args=default_args,
-    schedule_interval=None,
+    schedule_interval="0 */3 * * *",  # Chạy mỗi 3 tiếng (vào phút 0 của giờ 0, 3, 6, 9, 12, 15, 18, 21)
     catchup=False,
 ) as dag:
 

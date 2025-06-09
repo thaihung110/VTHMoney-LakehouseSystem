@@ -1,3 +1,5 @@
 astronomer-cosmos==1.9.2
 dbt-core==1.9.3
 dbt-dremio==1.8.2
+minio
+clickhouse-connect
