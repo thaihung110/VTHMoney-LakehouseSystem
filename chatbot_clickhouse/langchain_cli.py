@@ -2,6 +2,7 @@ import asyncio
 import os
 import warnings
 
+from dotenv import load_dotenv
 from langchain_mcp_adapters.tools import load_mcp_tools
 from langgraph.prebuilt import create_react_agent
 from mcp import ClientSession, StdioServerParameters
@@ -11,49 +12,12 @@ from mcp.client.stdio import stdio_client
 # 1. Đảm bảo đã cài các package: mcp, langchain-mcp-adapters, langgraph, langchain[anthropic]
 # 2. Chạy: python langchain_cli.py
 #
-# Thay đổi:
-# - API key Anthropic được fix cứng trong code (không hỏi input)
-# - Suppress ResourceWarning và ValueError về closed pipe khi asyncio đóng transport trên Windows
-
-# Suppress ResourceWarning và ValueError về closed pipe khi asyncio đóng transport trên Windows
-warnings.filterwarnings("ignore", category=ResourceWarning)
-import logging
-import sys
 
 
-def ignore_closed_pipe_exception():
-    # Patch asyncio to suppress ValueError: I/O operation on closed pipe
-    import asyncio.base_subprocess
-    import asyncio.proactor_events
-    import asyncio.windows_utils
+load_dotenv()
 
-    orig_repr = asyncio.proactor_events._ProactorBasePipeTransport.__repr__
-
-    def safe_repr(self):
-        try:
-            return orig_repr(self)
-        except ValueError:
-            return "<closed pipe>"
-
-    asyncio.proactor_events._ProactorBasePipeTransport.__repr__ = safe_repr
-
-    orig_sub_repr = asyncio.base_subprocess.BaseSubprocessTransport.__repr__
-
-    def safe_sub_repr(self):
-        try:
-            return orig_sub_repr(self)
-        except ValueError:
-            return "<closed pipe>"
-
-    asyncio.base_subprocess.BaseSubprocessTransport.__repr__ = safe_sub_repr
-
-
-ignore_closed_pipe_exception()
-
-# Fix cứng API key
-os.environ["ANTHROPIC_API_KEY"] = (
-    "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"
-)
+# Lấy API key từ environment
+os.environ["ANTHROPIC_API_KEY"] = os.getenv("ANTHROPIC_API_KEY")
 
 
 class UltraCleanStreamHandler:
@@ -98,7 +62,51 @@ class UltraCleanStreamHandler:
             self.last_was_tool = True
 
 
-async def main():
+# async def main():
+#     server_params = StdioServerParameters(
+#         command="uv",
+#         args=[
+#             "run",
+#             "--with",
+#             "mcp-clickhouse",
+#             "--python",
+#             "3.13",
+#             "mcp-clickhouse",
+#         ],
+#         env={
+#             "CLICKHOUSE_HOST": "localhost",
+#             "CLICKHOUSE_PORT": "8123",
+#             "CLICKHOUSE_USER": "admin",
+#             "CLICKHOUSE_PASSWORD": "password",
+#             "CLICKHOUSE_SECURE": "false",
+#         },
+#     )
+#     async with stdio_client(server_params) as (read, write):
+#         async with ClientSession(read, write) as session:
+#             await session.initialize()
+#             tools = await load_mcp_tools(session)
+#             agent = create_react_agent("anthropic:claude-sonnet-4-0", tools)
+#             handler = UltraCleanStreamHandler()
+#             async for chunk in agent.astream_events(
+#                 {
+#                     "messages": [
+#                         {
+#                             "role": "user",
+#                             "content": "Draw a simple chart of total transactions",
+#                         }
+#                     ]
+#                 },
+#                 version="v1",
+#             ):
+#                 handler.handle_chunk(chunk)
+#             print("\n")
+
+
+# if __name__ == "__main__":
+#     asyncio.run(main())
+
+
+async def run_agent_stream(prompt: str):
     server_params = StdioServerParameters(
         command="uv",
         args=[
@@ -117,26 +125,15 @@ async def main():
             "CLICKHOUSE_SECURE": "false",
         },
     )
+
     async with stdio_client(server_params) as (read, write):
         async with ClientSession(read, write) as session:
             await session.initialize()
             tools = await load_mcp_tools(session)
             agent = create_react_agent("anthropic:claude-sonnet-4-0", tools)
-            handler = UltraCleanStreamHandler()
+
             async for chunk in agent.astream_events(
-                {
-                    "messages": [
-                        {
-                            "role": "user",
-                            "content": "Show total transactions by payment method this month",
-                        }
-                    ]
-                },
+                {"messages": [{"role": "user", "content": prompt}]},
                 version="v1",
             ):
-                handler.handle_chunk(chunk)
-            print("\n")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
+                yield chunk  # Stream từng chunk cho UI xử lý
