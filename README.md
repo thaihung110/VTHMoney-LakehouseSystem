@@ -30,8 +30,9 @@ The following services are defined in the `docker-compose.yml`:
 Clone the repository to your local machine:
 
 ```bash
-git clone <repository-url>
-cd <repository-directory>
+git clone https://github.com/thaihung110/VTHMoney-LakehouseSystem.git
+cd VTHMoney-LakehouseSystem
+
 ```
 
 ### 2. Build and Start Services
