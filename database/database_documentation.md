@@ -52,7 +52,7 @@ Lưu trữ thông tin người dùng của hệ thống.
 | created_at    | TIMESTAMP    | Thời điểm tạo                   |
 | updated_at    | TIMESTAMP    | Thời điểm cập nhật cuối         |
 
-### 3. wallets
+### 2. wallets
 
 Quản lý ví điện tử của người dùng.
 
@@ -66,7 +66,7 @@ Quản lý ví điện tử của người dùng.
 | created_at | TIMESTAMP     | Thời điểm tạo                |
 | updated_at | TIMESTAMP     | Thời điểm cập nhật cuối      |
 
-### 4. transaction_types
+### 3. transaction_types
 
 Định nghĩa các loại giao dịch trong hệ thống.
 
@@ -78,7 +78,7 @@ Quản lý ví điện tử của người dùng.
 | description | TEXT         | Mô tả chi tiết            |
 | created_at  | TIMESTAMP    | Thời điểm tạo             |
 
-### 5. payment_methods
+### 4. payment_methods
 
 Quản lý các phương thức thanh toán.
 
@@ -92,7 +92,7 @@ Quản lý các phương thức thanh toán.
 | created_at  | TIMESTAMP    | Thời điểm tạo           |
 | updated_at  | TIMESTAMP    | Thời điểm cập nhật cuối |
 
-### 6. beneficiaries
+### 5. beneficiaries
 
 Danh sách người thụ hưởng (người nhận tiền).
 
@@ -109,7 +109,7 @@ Danh sách người thụ hưởng (người nhận tiền).
 | created_at               | TIMESTAMP    | Thời điểm tạo                    |
 | updated_at               | TIMESTAMP    | Thời điểm cập nhật cuối          |
 
-### 7. transactions
+### 6. transactions
 
 Lưu trữ thông tin các giao dịch.
 
@@ -131,7 +131,7 @@ Lưu trữ thông tin các giao dịch.
 | created_at          | TIMESTAMP          | Thời điểm tạo            |
 | updated_at          | TIMESTAMP          | Thời điểm cập nhật cuối  |
 
-### 8. notifications
+### 7. notifications
 
 Quản lý thông báo cho người dùng.
 
