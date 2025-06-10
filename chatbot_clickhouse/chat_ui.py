@@ -1,7 +1,6 @@
 import asyncio
 import re
 
-import matplotlib.pyplot as plt
 import streamlit as st
 from langchain_cli import run_agent_stream  # Hỗ trợ stream từng chunk
 
@@ -63,9 +62,6 @@ class StreamlitStreamHandler:
 
 
 def extract_and_execute_code(markdown_text):
-    import io
-    import sys
-    import types
 
     import altair as alt
     import matplotlib.pyplot as plt
