@@ -284,7 +284,7 @@ services:
 
   airflow-webserver:
     build:
-      : ./airflow
+      context: ./airflow
     container_name: airflow-webserver
     depends_on:
       airflow-db:
@@ -338,6 +338,28 @@ services:
     networks:
       - vthmoneynetwork
 
+  superset:
+    build:
+      context: superset/
+    container_name: superset
+    ports:
+      - "8088:8088"
+    environment:
+      - SUPERSET_SECRET_KEY=effe3072881e1b3893084ab69f4905d4e567e50aee19abc4f699d44acf18805c
+    depends_on:
+      - clickhouse
+    volumes:
+      - superset_home:/app/superset_home
+    networks:
+      - vthmoneynetwork
+    command: >
+      /bin/bash -c "
+      superset db upgrade &&
+      superset fab create-admin --username admin --firstname Superset --lastname Admin --email admin@example.com --password admin &&
+      superset init &&
+      superset run -h 0.0.0.0 -p 8088 --with-threads --reload
+      "
+
 volumes:
   postgres_data:
   minio_data:
@@ -345,6 +367,7 @@ volumes:
   dremio-conf:
   airflow_postgres_data:
   clickhouse_data:
+  superset_home:
 
 networks:
   vthmoneynetwork:
