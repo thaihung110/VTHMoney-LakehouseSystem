@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: fact_transactions
+    description: "This model represents the fact table for transactions, including details about the transaction, sender, and receiver."
+    columns:
+      - name: id
+        description: "Unique identifier for each transaction."
+      - name: transaction_type_id
+        description: "Identifier for the type of transaction."
+      - name: payment_method_id
+        description: "Identifier for the payment method used in the transaction."
+      - name: sender_wallet_id
+        description: "Identifier for the sender's wallet."
+      - name: sender_user_id
+        description: "Identifier for the user sending the transaction."
+      - name: receiver_wallet_id
+        description: "Identifier for the receiver's wallet."
+      - name: receiver_user_id
+        description: "Identifier for the user receiving the transaction."
+      - name: amount
+        description: "Amount of money involved in the transaction."
+      - name: currency
+        description: "Currency of the transaction amount."
+      - name: fee_amount
+        description: "Fee amount charged for the transaction."
+      - name: status
+        description: "Current status of the transaction."
+      - name: description
+        description: "Description of the transaction."
+      - name: reference_number
+        description: "Reference number for the transaction."
+      - name: created_at
+        description: "Timestamp when the transaction was created."
+      - name: updated_at
+        description: "Timestamp when the transaction was last updated."
+      - name: transaction_date
+        description: "The date truncated to the day from the transaction creation timestamp."

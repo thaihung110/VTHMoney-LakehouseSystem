@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: dim_user
+    description: "This model represents the dimension table for users, including their personal information."
+    columns:
+      - name: id
+        description: "Unique identifier for each user."
+      - name: full_name
+        description: "Full name of the user."
+      - name: email
+        description: "Email address of the user."
+      - name: phone_number
+        description: "Phone number of the user."
+      - name: gender
+        description: "Gender of the user."
+      - name: status
+        description: "Current status of the user (e.g., active, inactive)."
+      - name: created_at
+        description: "Timestamp when the user account was created."

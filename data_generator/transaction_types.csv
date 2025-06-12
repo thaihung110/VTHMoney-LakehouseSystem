@@ -1,4 +1,4 @@
-id,code,name,description
+id, code, name, description
 1,'DEPOSIT','Nạp tiền','Nạp tiền vào ví VTH Money'
 2,'WITHDRAW','Rút tiền','Rút tiền từ ví VTH Money'
 3,'TRANSFER','Chuyển tiền','Chuyển tiền giữa các ví VTH Money'

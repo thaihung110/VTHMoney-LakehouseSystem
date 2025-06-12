@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: dim_payment_method
+    description: "This model represents the dimension table for payment methods, including their codes and descriptions."
+    columns:
+      - name: id
+        description: "Unique identifier for each payment method."
+      - name: code
+        description: "Code representing the payment method."
+      - name: name
+        description: "Name of the payment method."
+      - name: description
+        description: "Description of the payment method."

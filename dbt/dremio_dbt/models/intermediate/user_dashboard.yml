@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: user_dashboard
+    description: "This model aggregates user information along with their total wallets, balance, transactions, and beneficiaries."
+    columns:
+      - name: user_id
+        description: "Unique identifier for each user."
+      - name: full_name
+        description: "Full name of the user."
+      - name: total_wallets
+        description: "Total number of wallets associated with the user."
+      - name: total_balance
+        description: "Total balance across all wallets for the user."
+      - name: total_transactions
+        description: "Total number of transactions made by the user."
+      - name: total_beneficiaries
+        description: "Total number of beneficiaries associated with the user."

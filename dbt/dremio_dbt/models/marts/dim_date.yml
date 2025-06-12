@@ -1,0 +1,8 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: "This model represents distinct dates derived from transaction creation timestamps."
+    columns:
+      - name: date_day
+        description: "The date truncated to the day from the transaction creation timestamp."

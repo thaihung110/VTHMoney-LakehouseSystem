@@ -7,9 +7,19 @@ from langchain_cli import run_agent_stream  # Hỗ trợ stream từng chunk
 st.set_page_config(page_title="DataMart Chatbot", layout="wide")
 st.title("🤖 DataMart Assistant")
 
-user_input = st.text_input(
-    "Ask something:", placeholder="e.g., Show total revenue by day"
-)
+
+# Khởi tạo lịch sử hội thoại
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Hiển thị lại toàn bộ lịch sử chat
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
+
+# user_input = st.text_input(
+#     "Ask something:", placeholder="e.g., Show total revenue by day"
+# )
 
 
 class StreamlitStreamHandler:
@@ -128,16 +138,33 @@ async def process_query_stream(prompt):
 
     # Sau khi stream xong: kiểm tra và thực thi biểu đồ
     extract_and_execute_code(handler.get_output())
+    return handler.get_output()
 
 
-if st.button("Send"):
-    if user_input.strip() == "":
-        st.warning("Please enter a question.")
-    else:
-        with st.spinner("Processing..."):
+# User gửi câu hỏi
+if prompt := st.chat_input("Nhập câu hỏi của bạn..."):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    with st.chat_message("assistant"):
+        with st.spinner("Đang suy nghĩ..."):
             try:
-                asyncio.run(process_query_stream(user_input))
-            except RuntimeError:
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
-                loop.run_until_complete(process_query_stream(user_input))
+
+                async def run_stream():
+                    return await process_query_stream(prompt)
+
+                try:
+                    response = asyncio.run(run_stream())
+                except RuntimeError:
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                    response = loop.run_until_complete(run_stream())
+
+                # ❌ KHÔNG cần st.markdown(response)
+                st.session_state.messages.append(
+                    {"role": "assistant", "content": response}
+                )
+
+            except Exception as e:
+                st.error(f"Lỗi: {e}")

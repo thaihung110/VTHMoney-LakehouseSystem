@@ -1,4 +1,4 @@
-id,code,name,description
+id, code, name, description
 1,'VTH_WALLET','Ví VTH Money','Thanh toán qua ví VTH Money'
 2,'BANK_TRANSFER','Chuyển khoản','Chuyển khoản ngân hàng liên kết'
 3,'CREDIT_CARD','Thẻ tín dụng','Thanh toán bằng thẻ tín dụng qua VTH Money')

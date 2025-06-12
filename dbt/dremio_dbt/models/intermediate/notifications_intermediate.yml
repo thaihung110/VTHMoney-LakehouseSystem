@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: notifications_intermediate
+    description: "This model aggregates notification information, including user details and transaction descriptions."
+    columns:
+      - name: notification_id
+        description: "Unique identifier for each notification."
+      - name: user_id
+        description: "Identifier for the user associated with the notification."
+      - name: user_full_name
+        description: "Full name of the user associated with the notification."
+      - name: transaction_id
+        description: "Identifier for the transaction related to the notification."
+      - name: transaction_description
+        description: "Description of the transaction related to the notification."
+      - name: title
+        description: "Title of the notification."
+      - name: message
+        description: "Message content of the notification."
+      - name: is_read
+        description: "Indicates if the notification has been read."
+      - name: created_at
+        description: "Timestamp when the notification was created."

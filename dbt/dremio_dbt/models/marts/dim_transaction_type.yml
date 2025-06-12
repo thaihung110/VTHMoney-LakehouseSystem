@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: dim_transaction_type
+    description: "This model represents the dimension table for transaction types, including their codes and descriptions."
+    columns:
+      - name: id
+        description: "Unique identifier for each transaction type."
+      - name: code
+        description: "Code representing the transaction type."
+      - name: name
+        description: "Name of the transaction type."
+      - name: description
+        description: "Description of the transaction type."
