@@ -38,7 +38,9 @@ async def run_agent_stream(prompt: str):
         async with ClientSession(read, write) as session:
             await session.initialize()
             tools = await load_mcp_tools(session)
-            agent = create_react_agent("anthropic:claude-sonnet-4-0", tools)
+            agent = create_react_agent(
+                "anthropic:claude-3-5-haiku-latest", tools
+            )
 
             async for chunk in agent.astream_events(
                 {"messages": [{"role": "user", "content": prompt}]},
