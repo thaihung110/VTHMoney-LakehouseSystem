@@ -15,3 +15,5 @@ mart_schema.txt
 create_clickhouse_table.txt
 chat_prompt.txt
 chatbot_clickhouse/.env
+data-pipeline.png
+mcp.png
