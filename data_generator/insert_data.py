@@ -398,10 +398,10 @@ class DataGenerator:
                     # Randomly choose what operation to perform
                     action = random.choice(
                         [
-                            # "insert_user",
+                            "insert_user",
                             # "insert_transaction",
                             # "insert_beneficiary",
-                            "insert_notification"
+                            # "insert_notification"
                             # "update_user",
                             # "update_wallet",
                             # "delete_beneficiary",
@@ -409,9 +409,9 @@ class DataGenerator:
                         ]
                     )
 
-                    # if action == "insert_user":
-                    #     user_id = self.insert_user()
-                    #     self.insert_wallet(user_id)
+                    if action == "insert_user":
+                        user_id = self.insert_user()
+                        self.insert_wallet(user_id)
                     # if action == "insert_transaction":
                     #     if len(self.wallet_ids) >= 2:
                     #         sender, receiver = random.sample(
@@ -424,10 +424,10 @@ class DataGenerator:
                     #     if self.user_ids:
                     #         user_id = random.choice(list(self.user_ids))
                     #         self.insert_beneficiary(user_id)
-                    if action == "insert_notification":
-                        if self.user_ids:
-                            user_id = random.choice(list(self.user_ids))
-                            self.insert_notification(user_id, str(uuid.uuid4()))
+                    # if action == "insert_notification":
+                    #     if self.user_ids:
+                    #         user_id = random.choice(list(self.user_ids))
+                    #         self.insert_notification(user_id, str(uuid.uuid4()))
                     # elif action == "update_user":
                     #     self.update_user()
                     # elif action == "update_wallet":

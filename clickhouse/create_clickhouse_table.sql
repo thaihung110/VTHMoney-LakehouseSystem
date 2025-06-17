@@ -1,4 +1,4 @@
--- ocker exec -it clickhouse clickhouse-client --host=clickhouse --port=9000 --user=admin --password=password
+-- docker exec -it clickhouse clickhouse-client --host=clickhouse --port=9000 --user=admin --password=password
 
 
 CREATE TABLE IF NOT EXISTS marts.dim_payment_method (

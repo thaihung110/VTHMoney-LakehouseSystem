@@ -136,7 +136,7 @@ CREATE DATABASE IF NOT EXISTS c_iceberg_hive.staging;
 USE c_iceberg_hive.staging;
 
 
-CREATE TABLE c_iceberg_hive.staging.users_iceberg (
+CREATE TABLE if not exists c_iceberg_hive.staging.users_iceberg (
     id STRING,
     phone_number STRING,
     email STRING,
