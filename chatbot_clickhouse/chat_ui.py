@@ -154,8 +154,12 @@ if prompt := st.chat_input("Nhập câu hỏi của bạn..."):
                 async def run_stream():
                     return await process_query_stream(prompt)
 
+                print("ok")
+
                 try:
+                    print("ok")
                     response = asyncio.run(run_stream())
+                    print("ok")
                 except RuntimeError:
                     loop = asyncio.new_event_loop()
                     asyncio.set_event_loop(loop)
